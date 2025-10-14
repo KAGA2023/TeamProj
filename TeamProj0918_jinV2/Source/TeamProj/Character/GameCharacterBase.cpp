@@ -18,6 +18,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "../MyGamePlayerState.h"
 #include "../MyGameController.h"
+#include "../Perk/PerkComponent.h"
 
 
 AGameCharacterBase::AGameCharacterBase()
@@ -462,22 +463,36 @@ AAllyCharacter::AAllyCharacter()
 	Team = ETeam::Ally;
 }
 
-void AAllyCharacter::BeginPlay()
+void AAllyCharacter::BeginPlay()  //추가
 {
 	Super::BeginPlay();
 
-
+	// 새로 스폰된 아군에게 PlayerState의 PerkComponent에서 적용된 모디파이어들 적용
 	APawn* Pawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	if (Pawn)
 	{
-		if (URoundComponent* RoundComp = Cast<AMyGamePlayerState>(Pawn->GetPlayerState())->RoundCom)
+		AMyGamePlayerState* GamePlayerState = Cast<AMyGamePlayerState>(Pawn->GetPlayerState());
+		if (GamePlayerState)
 		{
-			RoundComp->OnWarStart.AddDynamic(this, &AGameCharacterBase::WRAP_BuildingEfInterface);
-			UE_LOG(LogTemp, Warning, TEXT("Binding Succes"));
-		}
-		if (UBuildingStateComponent* buildingStateCom = Cast<AMyGamePlayerState>(Pawn->GetPlayerState())->BuildingCom)
-		{
-			buildingStateCom->OnActivate_Ally.AddDynamic(this, &AGameCharacterBase::WRAP_BuildingEfInterface);
+			if (UPerkComponent* PerkComp = GamePlayerState->FindComponentByClass<UPerkComponent>())
+			{
+				// 모든 아군에게 적용되는 모디파이어 적용
+				PerkComp->ApplyAllAllyStatModifiersToNewAlly(StatusComp);
+				
+				// 특정 유닛 타겟팅 모디파이어 적용 (임시로 클래스 이름 사용)
+				FName UnitID = FName(*this->GetClass()->GetName());
+				PerkComp->ApplyTargetedUnitModifiersToNewAlly(StatusComp, UnitID);
+			}
+			
+			if (URoundComponent* RoundComp = GamePlayerState->RoundCom)
+			{
+				RoundComp->OnWarStart.AddDynamic(this, &AGameCharacterBase::WRAP_BuildingEfInterface);
+				UE_LOG(LogTemp, Warning, TEXT("Binding Succes"));
+			}
+			if (UBuildingStateComponent* buildingStateCom = GamePlayerState->BuildingCom)
+			{
+				buildingStateCom->OnActivate_Ally.AddDynamic(this, &AGameCharacterBase::WRAP_BuildingEfInterface);
+			}
 		}
 	}
 }

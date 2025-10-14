@@ -34,7 +34,7 @@ static ETeamAttitude::Type SolveAttitude(FGenericTeamId A, FGenericTeamId B)
 
 	const uint8 a = A.GetId();
 	const uint8 b = B.GetId();
-	const bool aIsPAB = (a == 1 || a == 2 || a == 3); //ÇÃ·¹ÀÌ¾î ¾Æ±º ºôµù
+	const bool aIsPAB = (a == 1 || a == 2 || a == 3); //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Æ±ï¿½ ï¿½ï¿½ï¿½ï¿½
 	const bool bIsPAB = (b == 1 || b == 2 || b == 3);
 
 	if (aIsPAB && bIsPAB) return ETeamAttitude::Friendly;
