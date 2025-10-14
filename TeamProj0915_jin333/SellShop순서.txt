@@ -1,0 +1,6 @@
+ItemSlot의 형태를 이어서 SellItemSlot 제작
+1. 버튼 누르면 해당 ItemID 지정
+2. 수량은 인벤토리에 보유 갯수(수량은 따로 입력받게)
+SellItemSlot으로 W_SellItemSlot 블프 다듬고 마무리
+
+SellShop 유니폼 그리드에 블프 추가하게 세팅
