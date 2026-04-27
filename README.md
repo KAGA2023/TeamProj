@@ -1,1 +1,1 @@
-[게임영상 유튜브 링크] https://youtu.be/iItsgCgZeis
+[게임영상 유튜브 링크] https://youtu.be/bmLhDSudVPk
